@@ -2,7 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {dataSource} from "../../lib/datasource";
 import {User} from "../../entities/user";
-import {expect} from "chai";
+import {QueryFailedError} from "typeorm";
 
 chai.use(chaiAsPromised)
 
@@ -20,7 +20,12 @@ describe('User', function () {
         it('should create a new User in database', async () => {
             const userRepository = dataSource.getRepository(User);
 
-            const user = new User("firstname", "lastname", "test@test.fr", "123456");
+            const user = new User();
+
+            user.firstname = "firstname";
+            user.lastname = "lastname";
+            user.email = "test@test.fr";
+            user.passwordHash = "123456";
 
             await userRepository.save(user);
 
@@ -29,7 +34,18 @@ describe('User', function () {
 
         it('should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
-            // await chai.expect(promise).to.eventually.be.rejectedWith(QueryFailedError, "message")
+
+            const userRepository = dataSource.getRepository(User);
+
+            const user = new User();
+
+            user.firstname = "firstname";
+            user.lastname = "lastname";
+            user.passwordHash = "123456";
+
+            const promise = userRepository.save(user);
+
+            await chai.expect(promise).to.eventually.be.rejectedWith(QueryFailedError, 'null value in column "email" of relation "user" violates not-null constraint')
         })
     })
 })

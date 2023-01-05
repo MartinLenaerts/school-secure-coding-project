@@ -1,15 +1,14 @@
 {
-  "name": "secure-conding-project",
+  "name": "secure-coding-project",
   "version": "1.0.0",
-  "description": "Basic template of a node + typescript project",
+  "description": "Secure coding project in node and typescript",
   "main": "dist/index.js",
   "scripts": {
     "build": "rm -fr dist && tsc",
     "lint": "eslint --fix src",
-    "test": "npm run build && NODE_ENV=test mocha --recursive dist/specs --exit --async-stack-traces",
-    "start": "ts-node src/index.ts"
+    "test": "npm run build && NODE_ENV=test mocha --recursive dist/specs --exit --async-stack-traces"
   },
-  "author": "Thomas VEILLARD",
+  "author": "Martin Lenaerts",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.3.4",

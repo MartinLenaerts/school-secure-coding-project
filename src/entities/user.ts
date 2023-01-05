@@ -3,24 +3,19 @@ import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number | null = null;
+    id!: number;
 
     @Column()
-    firstname: string;
+    firstname!: string;
 
     @Column()
-    lastname: string
+    lastname!: string;
+
+    @Column({
+        nullable: false
+    })
+    email!: string;
 
     @Column()
-    email: string
-
-    @Column()
-    passwordHash: string
-
-    constructor(firstname: string, lastname: string, email: string, passwordHash: string) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.passwordHash = passwordHash;
-    }
+    passwordHash!: string;
 }
