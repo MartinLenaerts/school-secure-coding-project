@@ -1,10 +1,12 @@
 import {config} from 'dotenv'
 
+config();
+
 const getOrThrow = (name: string): string => {
     const envVar = process.env[name];
 
     if (typeof envVar == undefined) {
-        throw new Error(`Undefined variable ${name}`);
+        throw `Undefined variable ${name}`;
     }
 
     return "" + envVar;

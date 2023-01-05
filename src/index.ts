@@ -1,9 +1,8 @@
-import {AppDataSource} from "./lib/datasource";
-
+import {dataSource} from "./lib/datasource";
 
 async function run() {
     try {
-        await AppDataSource.initialize();
+        await dataSource.initialize();
     } catch (e) {
         console.error(e);
     }

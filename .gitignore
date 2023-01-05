@@ -1,6 +1,6 @@
 .idea
 .DS_Store
 node_modules
-.env.local
+.env*
 docker
 dist

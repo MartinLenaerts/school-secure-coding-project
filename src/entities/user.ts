@@ -3,7 +3,7 @@ import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number | null = null;
 
     @Column()
     firstname: string;
@@ -17,8 +17,7 @@ export class User {
     @Column()
     passwordHash: string
 
-    constructor(id: number, firstname: string, lastname: string, email: string, passwordHash: string) {
-        this.id = id;
+    constructor(firstname: string, lastname: string, email: string, passwordHash: string) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;

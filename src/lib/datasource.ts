@@ -3,7 +3,7 @@ import { DataSource } from "typeorm"
 import {User} from "../entities/user";
 import {DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USERNAME} from "./dotenv";
 
-export const AppDataSource = new DataSource({
+export const dataSource = new DataSource({
     type: "postgres",
     host: DB_HOST,
     port: DB_PORT,
