@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {ValidationError} from "../errors/ValidationError";
 
 @Entity()
 export class User {
@@ -18,4 +19,12 @@ export class User {
 
     @Column()
     passwordHash!: string;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    checkRequiredProperties() {
+        if (!this.email || this.email === "") {
+            throw new ValidationError("The email is required", this, "email");
+        }
+    }
 }

@@ -2,7 +2,8 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {dataSource} from "../../lib/datasource";
 import {User} from "../../entities/user";
-import {QueryFailedError} from "typeorm";
+import {ValidationError} from "../../errors/ValidationError";
+import {expect} from "chai";
 
 chai.use(chaiAsPromised)
 
@@ -29,13 +30,13 @@ describe('User', function () {
 
             await userRepository.save(user);
 
-            await chai.expect(user).haveOwnProperty('id').and.be.a('number');
+            await expect(user).haveOwnProperty('id').and.be.a('number');
         })
 
         it('should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
 
-            const userRepository = dataSource.getRepository(User);
+            const repo = dataSource.getRepository(User);
 
             const user = new User();
 
@@ -43,9 +44,9 @@ describe('User', function () {
             user.lastname = "lastname";
             user.passwordHash = "123456";
 
-            const promise = userRepository.save(user);
-
-            await chai.expect(promise).to.eventually.be.rejectedWith(QueryFailedError, 'null value in column "email" of relation "user" violates not-null constraint')
+            await expect(repo.save(user)).to.eventually
+                .be.rejectedWith(ValidationError, "The email is required")
+                .and.include({ target: user, property: 'email' })
         })
     })
 })
