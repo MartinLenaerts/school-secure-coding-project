@@ -4,6 +4,7 @@ import {dataSource} from "../../lib/datasource";
 import {User} from "../../entities/user";
 import {expect} from "chai";
 import {Repository} from "typeorm";
+import {faker} from "@faker-js/faker";
 
 chai.use(chaiAsPromised)
 
@@ -24,9 +25,9 @@ describe('User', function () {
 
             const user = new User();
 
-            user.firstname = "firstname";
-            user.lastname = "lastname";
-            user.email = "test@test.fr";
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = faker.internet.email();
             user.passwordHash = "123456";
 
             await repo.save(user);
@@ -34,14 +35,13 @@ describe('User', function () {
             await expect(user).haveOwnProperty('id').and.be.a('number');
         })
 
-        it('should raise error if email is missing', async function () {
+        it('[insert] should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
-
 
             const user = new User();
 
-            user.firstname = "firstname";
-            user.lastname = "lastname";
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
             user.passwordHash = "123456";
 
 
@@ -51,6 +51,51 @@ describe('User', function () {
                 constraints: {isNotEmpty: 'email should not be empty'}
             })
 
+        })
+
+        it('[update] should raise error if email is missing', async function () {
+            // hint to check if a promise fails with chai + chai-as-promise:
+
+            const user = new User();
+
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = faker.internet.email();
+            user.passwordHash = "123456";
+
+            await repo.save(user);
+
+            let userInserted = (await repo.findOneBy({id: user.id})) as User;
+
+            userInserted.email = "";
+
+
+            await expect(repo.save(userInserted)).to.eventually.be.rejected.and.deep.include({
+                target: userInserted,
+                property: 'email',
+                constraints: {isNotEmpty: 'email should not be empty'}
+            })
+
+        })
+
+        it('should create user with lowercase email', async function () {
+            // hint to check if a promise fails with chai + chai-as-promise:
+
+            const user = new User();
+
+            const email = "JOHN.DOE@gmail.com";
+
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = email;
+            user.passwordHash = "123456";
+
+            await repo.save(user);
+
+            let userInserted = (await repo.findOneBy({id: user.id})) as User;
+
+
+            await expect(userInserted.email).eq("john.doe@gmail.com")
         })
     })
 })

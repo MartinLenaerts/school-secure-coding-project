@@ -4,18 +4,27 @@ import {IsNotEmpty} from "class-validator";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id!: number;
+    id?: number;
 
     @Column()
-    firstname!: string;
+    firstname?: string;
 
     @Column()
-    lastname!: string;
+    lastname?: string;
 
-    @Column()
+    @Column({
+        transformer: {
+            from(value: string) {
+                return value.toLowerCase();
+            },
+            to(value: string) {
+                return value.toLowerCase();
+            },
+        },
+    })
     @IsNotEmpty()
-    email!: string;
+    email?: string;
 
     @Column()
-    passwordHash!: string;
+    passwordHash?: string;
 }
