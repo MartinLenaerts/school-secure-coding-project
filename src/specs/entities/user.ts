@@ -5,6 +5,7 @@ import {User} from "../../entities/user";
 import {expect} from "chai";
 import {Repository} from "typeorm";
 import {faker} from "@faker-js/faker";
+import {ValidationError} from "class-validator";
 
 chai.use(chaiAsPromised)
 
@@ -123,8 +124,20 @@ describe('User', function () {
                 target: secondUser,
                 property: 'email',
                 value: email,
-                constraints: { UniqueInColumn: 'email already exists' },
+                constraints: {UniqueInColumn: 'email already exists'},
             });
         })
+
+        it('should raise error if password does not match', async () => {
+            const user = new User();
+
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = faker.internet.email();
+
+            await chai.expect(user.setPassword("123456", "wrongpassword")).to.eventually
+                .be.rejected
+                .and.be.an.instanceOf(ValidationError);
+        });
     })
 })

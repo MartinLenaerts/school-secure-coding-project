@@ -1,17 +1,18 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-import {IsNotEmpty} from "class-validator";
+import {IsNotEmpty, ValidationError} from "class-validator";
 import {UniqueInColumn} from "../decorators/UniqueInColumn";
+import {genSalt, hash} from "bcrypt";
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id?: number;
+    id!: number;
 
     @Column()
-    firstname?: string;
+    firstname!: string;
 
     @Column()
-    lastname?: string;
+    lastname!: string;
 
     @Column({
         transformer: {
@@ -25,8 +26,17 @@ export class User {
     })
     @IsNotEmpty()
     @UniqueInColumn()
-    email?: string;
+    email!: string;
 
     @Column()
-    passwordHash?: string;
+    passwordHash!: string;
+
+    async setPassword(password: string, passwordConfirmation: string) {
+        if (passwordConfirmation != password) {
+            throw new ValidationError();
+        }
+
+        const salt = await genSalt();
+        this.passwordHash = await hash(password, salt);
+    }
 }
