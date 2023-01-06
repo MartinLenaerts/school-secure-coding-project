@@ -97,5 +97,34 @@ describe('User', function () {
 
             await expect(userInserted.email).eq("john.doe@gmail.com")
         })
+
+        it('should raise error if email is missing', async function () {
+            // hint to check if a promise fails with chai + chai-as-promise:
+
+            const user = new User();
+
+            const email = faker.internet.email();
+
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = email;
+            user.passwordHash = "123456";
+
+            await repo.save(user);
+
+            const secondUser = new User()
+
+            secondUser.firstname = faker.name.firstName();
+            secondUser.lastname = faker.name.lastName();
+            secondUser.email = email;
+            secondUser.passwordHash = "123456";
+
+            await chai.expect(repo.save(secondUser)).to.eventually.be.rejected.and.deep.include({
+                target: secondUser,
+                property: 'email',
+                value: email,
+                constraints: { UniqueInColumn: 'email already exists' },
+            });
+        })
     })
 })

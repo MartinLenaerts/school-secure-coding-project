@@ -1,5 +1,6 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 import {IsNotEmpty} from "class-validator";
+import {UniqueInColumn} from "../decorators/UniqueInColumn";
 
 @Entity()
 export class User {
@@ -23,6 +24,7 @@ export class User {
         },
     })
     @IsNotEmpty()
+    @UniqueInColumn()
     email?: string;
 
     @Column()
