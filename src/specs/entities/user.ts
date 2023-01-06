@@ -2,24 +2,25 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {dataSource} from "../../lib/datasource";
 import {User} from "../../entities/user";
-import {ValidationError} from "../../errors/ValidationError";
 import {expect} from "chai";
+import {Repository} from "typeorm";
 
 chai.use(chaiAsPromised)
 
 describe('User', function () {
+    let repo: Repository<User>;
+
     before(async function () {
-        await dataSource.initialize()
+        await dataSource.initialize();
+        repo = dataSource.getRepository(User);
     })
 
     beforeEach(async function () {
-        const userRepository = dataSource.getRepository(User)
-        await userRepository.clear();
+        await repo.clear();
     })
 
     describe('validations', function () {
         it('should create a new User in database', async () => {
-            const userRepository = dataSource.getRepository(User);
 
             const user = new User();
 
@@ -28,7 +29,7 @@ describe('User', function () {
             user.email = "test@test.fr";
             user.passwordHash = "123456";
 
-            await userRepository.save(user);
+            await repo.save(user);
 
             await expect(user).haveOwnProperty('id').and.be.a('number');
         })
@@ -36,7 +37,6 @@ describe('User', function () {
         it('should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
 
-            const repo = dataSource.getRepository(User);
 
             const user = new User();
 
@@ -44,9 +44,13 @@ describe('User', function () {
             user.lastname = "lastname";
             user.passwordHash = "123456";
 
-            await expect(repo.save(user)).to.eventually
-                .be.rejectedWith(ValidationError, "The email is required")
-                .and.include({ target: user, property: 'email' })
+
+            await expect(repo.save(user)).to.eventually.be.rejected.and.deep.include({
+                target: user,
+                property: 'email',
+                constraints: {isNotEmpty: 'email should not be empty'}
+            })
+
         })
     })
 })

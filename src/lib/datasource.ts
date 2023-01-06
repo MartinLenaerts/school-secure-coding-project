@@ -2,6 +2,7 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import {User} from "../entities/user";
 import {DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USERNAME} from "./dotenv";
+import {UserSubscriber} from "../subscribers/UserSubscriber";
 
 export const dataSource = new DataSource({
     type: "postgres",
@@ -13,4 +14,5 @@ export const dataSource = new DataSource({
     entities: [User],
     synchronize: true,
     logging: false,
+    subscribers: [UserSubscriber]
 });
