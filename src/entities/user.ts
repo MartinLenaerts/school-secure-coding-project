@@ -2,6 +2,7 @@ import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 import {IsNotEmpty, ValidationError} from "class-validator";
 import {UniqueInColumn} from "../decorators/UniqueInColumn";
 import {genSalt, hash} from "bcrypt";
+import {SetPasswordDTO} from "../DTO/SetPasswordDTO";
 
 @Entity()
 export class User {
@@ -31,12 +32,12 @@ export class User {
     @Column()
     passwordHash!: string;
 
-    async setPassword(password: string, passwordConfirmation: string) {
-        if (passwordConfirmation != password) {
+    async setPassword(dto: SetPasswordDTO) {
+        if (dto.password != dto.confirmation) {
             throw new ValidationError();
         }
 
         const salt = await genSalt();
-        this.passwordHash = await hash(password, salt);
+        this.passwordHash = await hash(dto.password, salt);
     }
 }

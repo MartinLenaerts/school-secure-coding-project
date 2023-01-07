@@ -6,6 +6,7 @@ import {expect} from "chai";
 import {Repository} from "typeorm";
 import {faker} from "@faker-js/faker";
 import {ValidationError} from "class-validator";
+import {SetPasswordDTO} from "../../DTO/SetPasswordDTO";
 
 chai.use(chaiAsPromised)
 
@@ -135,7 +136,9 @@ describe('User', function () {
             user.lastname = faker.name.lastName();
             user.email = faker.internet.email();
 
-            await chai.expect(user.setPassword("123456", "wrongpassword")).to.eventually
+            const dto = new SetPasswordDTO("123456", "wrongpassword");
+
+            await chai.expect(user.setPassword(dto)).to.eventually
                 .be.rejected
                 .and.be.an.instanceOf(ValidationError);
         });
