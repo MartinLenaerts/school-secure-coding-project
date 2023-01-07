@@ -1,15 +1,13 @@
-import * as chai from 'chai'
-import * as chaiAsPromised from 'chai-as-promised'
 import {dataSource} from "../../lib/datasource";
 import {User} from "../../entities/user";
-import {expect} from "chai";
+import {expect, use} from "chai";
 import {Repository} from "typeorm";
 import {faker} from "@faker-js/faker";
 import {ValidationError} from "class-validator";
 import {SetPasswordDTO} from "../../DTO/SetPasswordDTO";
+import * as chaiAsPromised from "chai-as-promised";
 
-chai.use(chaiAsPromised)
-
+use(chaiAsPromised)
 describe('User', function () {
     let repo: Repository<User>;
 
@@ -121,7 +119,7 @@ describe('User', function () {
             secondUser.email = email;
             secondUser.passwordHash = "123456";
 
-            await chai.expect(repo.save(secondUser)).to.eventually.be.rejected.and.deep.include({
+            await expect(repo.save(secondUser)).to.eventually.be.rejected.and.deep.include({
                 target: secondUser,
                 property: 'email',
                 value: email,
@@ -138,9 +136,35 @@ describe('User', function () {
 
             const dto = new SetPasswordDTO("123456", "wrongpassword");
 
-            await chai.expect(user.setPassword(dto)).to.eventually
+            await expect(user.setPassword(dto)).to.eventually
                 .be.rejected
                 .and.be.an.instanceOf(ValidationError);
+        });
+
+        it('should raise error if password is not strong', async () => {
+            const user = new User();
+
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = faker.internet.email();
+
+            const dto = new SetPasswordDTO("123456", "123456");
+
+            await expect(user.setPassword(dto)).to.eventually
+                .be.rejected
+                .and.be.an.instanceOf(ValidationError);
+        });
+
+        it('should set password without error', async () => {
+            const user = new User();
+
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = faker.internet.email();
+
+            const dto = new SetPasswordDTO("azerty112345678@", "azerty112345678@");
+
+            await expect(await user.setPassword(dto)).undefined;
         });
     })
 })

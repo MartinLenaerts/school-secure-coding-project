@@ -3,6 +3,7 @@ import {IsNotEmpty, ValidationError} from "class-validator";
 import {UniqueInColumn} from "../decorators/UniqueInColumn";
 import {genSalt, hash} from "bcrypt";
 import {SetPasswordDTO} from "../DTO/SetPasswordDTO";
+import {entropy} from "../lib/passwordEntropy";
 
 @Entity()
 export class User {
@@ -33,7 +34,7 @@ export class User {
     passwordHash!: string;
 
     async setPassword(dto: SetPasswordDTO) {
-        if (dto.password != dto.confirmation) {
+        if (dto.password != dto.confirmation || entropy(dto.password) < 80) {
             throw new ValidationError();
         }
 
