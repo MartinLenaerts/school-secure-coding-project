@@ -1,7 +1,7 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 import {IsNotEmpty, ValidationError} from "class-validator";
 import {UniqueInColumn} from "../decorators/UniqueInColumn";
-import {genSalt, hash} from "bcrypt";
+import {compare, genSalt, hash} from "bcrypt";
 import {SetPasswordDTO} from "../DTO/SetPasswordDTO";
 import {entropy} from "../lib/passwordEntropy";
 
@@ -40,5 +40,9 @@ export class User {
 
         const salt = await genSalt();
         this.passwordHash = await hash(dto.password, salt);
+    }
+
+    async isPasswordValid(password: string) {
+        return await compare(password, this.passwordHash);
     }
 }

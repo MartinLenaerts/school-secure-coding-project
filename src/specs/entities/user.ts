@@ -166,5 +166,33 @@ describe('User', function () {
 
             await expect(await user.setPassword(dto)).undefined;
         });
+
+        it('should do not valid the password', async () => {
+            const user = new User();
+
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = faker.internet.email();
+
+            const dto = new SetPasswordDTO("azerty112345678@", "azerty112345678@");
+
+            await user.setPassword(dto);
+
+            await expect(await user.isPasswordValid("123456")).false;
+        });
+
+        it('should valid the password', async () => {
+            const user = new User();
+
+            user.firstname = faker.name.firstName();
+            user.lastname = faker.name.lastName();
+            user.email = faker.internet.email();
+
+            const dto = new SetPasswordDTO("azerty112345678@", "azerty112345678@");
+
+            await user.setPassword(dto);
+
+            await expect(await user.isPasswordValid("azerty112345678@")).true;
+        });
     })
 })
