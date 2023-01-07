@@ -2,7 +2,7 @@
 
 ![test workflow](https://github.com/MartinLenaerts/school-secure-coding-project/actions/workflows/test.yaml/badge.svg)
 
-## ![Subject](https://thomas-veillard.fr/front-end-web-development/04-backend/03-iam-app-database-model-bootstraping-pratical-activity/)
+## [Subject](https://thomas-veillard.fr/front-end-web-development/04-backend/03-iam-app-database-model-bootstraping-pratical-activity/)
 
 ## Tools :
 
