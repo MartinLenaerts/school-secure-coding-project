@@ -7,7 +7,7 @@ import {entropy} from "../lib/passwordEntropy";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     id!: number;
 
     @Column()

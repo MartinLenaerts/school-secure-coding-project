@@ -32,7 +32,7 @@ describe('User', function () {
 
             await repo.save(user);
 
-            await expect(user).haveOwnProperty('id').and.be.a('number');
+            await expect(user).haveOwnProperty('id').and.be.a('string');
         })
 
         it('[insert] should raise error if email is missing', async function () {
