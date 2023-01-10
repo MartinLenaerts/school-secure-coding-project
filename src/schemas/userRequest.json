@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "CreateUserRequestBody",
   "type": "object",
   "properties": {
@@ -19,6 +18,7 @@
       "type": "string"
     }
   },
+  "additionalProperties": false,
   "required": [
     "firstname",
     "lastname",

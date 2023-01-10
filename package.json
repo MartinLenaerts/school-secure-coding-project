@@ -7,7 +7,8 @@
     "build": "rm -fr dist && tsc",
     "lint": "eslint --fix src",
     "test": "npm run build && NODE_ENV=test mocha --recursive dist/specs --exit --async-stack-traces",
-    "start": "ts-node src/index.ts"
+    "start": "ts-node src/index.ts",
+    "compile-schemas": "json2ts -i src/schemas -o src/types"
   },
   "author": "Martin Lenaerts",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.2.0",
+    "json-schema-to-typescript": "^11.0.2",
     "mocha": "^10.1.0",
     "typescript": "^4.3.2"
   },

@@ -10,6 +10,7 @@
       "type": "string"
     }
   },
+  "additionalProperties": false,
   "required": [
     "email",
     "password"
