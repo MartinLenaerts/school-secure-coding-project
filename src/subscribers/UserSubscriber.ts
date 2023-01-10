@@ -18,7 +18,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
     }
 
     async beforeUpdate(event: UpdateEvent<User>) {
-        const [error] = await validate(event.entity!);
+        const [error] = await validate(event.databaseEntity);
 
         if (error) {
             throw error;

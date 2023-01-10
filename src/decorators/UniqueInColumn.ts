@@ -1,9 +1,9 @@
-import {registerDecorator, ValidationArguments, ValidationOptions} from "class-validator";
+import {registerDecorator} from "class-validator";
 import {User} from "../entities/user";
 import {dataSource} from "../lib/datasource";
 
-export function UniqueInColumn(property?: string, validationOptions?: ValidationOptions) {
-    return function (object: Object, propertyName: string) {
+export function UniqueInColumn(property?: string) {
+    return function (object: object, propertyName: string) {
         registerDecorator({
             name: 'UniqueInColumn',
             target: object.constructor,
@@ -13,7 +13,7 @@ export function UniqueInColumn(property?: string, validationOptions?: Validation
                 message: `${propertyName} already exists`,
             },
             validator: {
-                async validate(value: any, args: ValidationArguments) {
+                async validate(value: string) {
                     if(!dataSource.isInitialized){
                         await dataSource.initialize();
                     }
