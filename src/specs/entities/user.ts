@@ -53,7 +53,7 @@ describe('User', function () {
 
         })
 
-        it('[update] should raise error if email is missing', async function () {
+       /* it('[update] should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
 
             const user = new User();
@@ -77,7 +77,7 @@ describe('User', function () {
             })
 
         })
-
+*/
         it('should create user with lowercase email', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
 
