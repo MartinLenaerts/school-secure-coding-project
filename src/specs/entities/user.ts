@@ -65,7 +65,7 @@ describe('User', function () {
 
             await repo.save(user);
 
-            let userInserted = (await repo.findOneBy({id: user.id})) as User;
+            const userInserted = (await repo.findOneBy({id: user.id})) as User;
 
             userInserted.email = "";
 
@@ -92,7 +92,7 @@ describe('User', function () {
 
             await repo.save(user);
 
-            let userInserted = (await repo.findOneBy({id: user.id})) as User;
+            const userInserted = (await repo.findOneBy({id: user.id})) as User;
 
 
             await expect(userInserted.email).eq("john.doe@gmail.com")
