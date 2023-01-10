@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rm -fr dist && tsc",
     "lint": "eslint --fix src",
-    "test": "npm run build && NODE_ENV=test mocha --recursive dist/specs --exit --async-stack-traces"
+    "test": "npm run build && NODE_ENV=test mocha --recursive dist/specs --exit --async-stack-traces",
+    "start": "ts-node src/index.ts"
   },
   "author": "Martin Lenaerts",
   "license": "ISC",
@@ -29,6 +30,7 @@
     "bcrypt": "^5.1.0",
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
+    "fastify": "^4.11.0",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.11"

@@ -1,12 +1,10 @@
-import {dataSource} from "./lib/datasource";
+import {FASTIFY_ADDR, FASTIFY_PORT} from './lib/dotenv'
+import {server} from './lib/fastify'
+import {dataSource} from './lib/datasource'
 
 async function run() {
-    try {
-        await dataSource.initialize();
-    } catch (e) {
-        console.error(e);
-    }
-
+    await dataSource.initialize()
+    await server.listen({port: FASTIFY_PORT, host: FASTIFY_ADDR})
 }
 
-void run();
+run().catch(console.error)
