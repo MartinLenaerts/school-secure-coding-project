@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  validation:
+  analysis:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,8 @@ jobs:
 
       - name: Launch eslint
         run: npm run lint
-  tests:
+  test:
+    needs: analysis
     runs-on: ubuntu-latest
 
     steps:
