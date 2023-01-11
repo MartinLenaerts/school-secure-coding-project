@@ -18,4 +18,4 @@ export const entropy = (password: string) => {
     }
 
     return Math.log2(charProbabilities ** password.length);
-}
+};

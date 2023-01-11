@@ -1,10 +1,11 @@
-export class SetPasswordDTO{
-    password: string;
+import {Match} from "../decorators/Match";
+import {Entropy} from "../decorators/Entropy";
 
-    confirmation: string;
+export class SetPasswordDTO {
 
-    constructor(password: string, confirmation: string) {
-        this.password = password;
-        this.confirmation = confirmation;
-    }
+    @Entropy(80)
+    @Match('confirmation')
+    password!: string;
+
+    confirmation!: string;
 }

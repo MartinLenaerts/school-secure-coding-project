@@ -1,4 +1,4 @@
-import {config} from 'dotenv'
+import {config} from 'dotenv';
 
 config();
 
@@ -10,7 +10,7 @@ const getOrThrow = (name: string): string => {
     }
 
     return "" + envVar;
-}
+};
 
 export const DB_HOST = getOrThrow("DB_HOST");
 export const DB_PORT = parseInt(getOrThrow("DB_PORT"), 10);

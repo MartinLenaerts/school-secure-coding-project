@@ -1,4 +1,4 @@
-import {server} from '../../../lib/fastify'
+import {server} from '../../../lib/fastify';
 import {expect} from "chai";
 
 describe('/web-api/users', function () {
@@ -12,9 +12,9 @@ describe('/web-api/users', function () {
                     password: "verystrongpassword@123456789",
                     passwordConfirmation: "verystrongpassword@123456789"
                 }
-            })
+            });
 
-            expect(response.statusCode).eq(200)
-        })
-    })
-})
+            expect(response.statusCode).eq(200);
+        });
+    });
+});

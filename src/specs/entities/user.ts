@@ -4,21 +4,20 @@ import {expect, use} from "chai";
 import {Repository} from "typeorm";
 import {faker} from "@faker-js/faker";
 import {ValidationError} from "class-validator";
-import {SetPasswordDTO} from "../../DTO/SetPasswordDTO";
 import * as chaiAsPromised from "chai-as-promised";
 
-use(chaiAsPromised)
+use(chaiAsPromised);
 describe('User', function () {
     let repo: Repository<User>;
 
     before(async function () {
         await dataSource.initialize();
         repo = dataSource.getRepository(User);
-    })
+    });
 
     beforeEach(async function () {
         await repo.clear();
-    })
+    });
 
     describe('validations', function () {
         it('should create a new User in database', async () => {
@@ -33,7 +32,7 @@ describe('User', function () {
             await repo.save(user);
 
             await expect(user).haveOwnProperty('id').and.be.a('string');
-        })
+        });
 
         it('[insert] should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
@@ -49,35 +48,35 @@ describe('User', function () {
                 target: user,
                 property: 'email',
                 constraints: {isNotEmpty: 'email should not be empty'}
-            })
+            });
 
-        })
+        });
 
-       /* it('[update] should raise error if email is missing', async function () {
-            // hint to check if a promise fails with chai + chai-as-promise:
+        /* it('[update] should raise error if email is missing', async function () {
+             // hint to check if a promise fails with chai + chai-as-promise:
 
-            const user = new User();
+             const user = new User();
 
-            user.firstname = faker.name.firstName();
-            user.lastname = faker.name.lastName();
-            user.email = faker.internet.email();
-            user.passwordHash = "123456";
+             user.firstname = faker.name.firstName();
+             user.lastname = faker.name.lastName();
+             user.email = faker.internet.email();
+             user.passwordHash = "123456";
 
-            await repo.save(user);
+             await repo.save(user);
 
-            const userInserted = (await repo.findOneBy({id: user.id})) as User;
+             const userInserted = (await repo.findOneBy({id: user.id})) as User;
 
-            userInserted.email = "";
+             userInserted.email = "";
 
 
-            await expect(repo.save(userInserted)).to.eventually.be.rejected.and.deep.include({
-                target: userInserted,
-                property: 'email',
-                constraints: {isNotEmpty: 'email should not be empty'}
-            })
+             await expect(repo.save(userInserted)).to.eventually.be.rejected.and.deep.include({
+                 target: userInserted,
+                 property: 'email',
+                 constraints: {isNotEmpty: 'email should not be empty'}
+             })
 
-        })
-*/
+         })
+ */
         it('should create user with lowercase email', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
 
@@ -95,8 +94,8 @@ describe('User', function () {
             const userInserted = (await repo.findOneBy({id: user.id})) as User;
 
 
-            await expect(userInserted.email).eq("john.doe@gmail.com")
-        })
+            await expect(userInserted.email).eq("john.doe@gmail.com");
+        });
 
         it('should raise error if email is missing', async function () {
             // hint to check if a promise fails with chai + chai-as-promise:
@@ -112,7 +111,7 @@ describe('User', function () {
 
             await repo.save(user);
 
-            const secondUser = new User()
+            const secondUser = new User();
 
             secondUser.firstname = faker.name.firstName();
             secondUser.lastname = faker.name.lastName();
@@ -125,7 +124,7 @@ describe('User', function () {
                 value: email,
                 constraints: {UniqueInColumn: 'email already exists'},
             });
-        })
+        });
 
         it('should raise error if password does not match', async () => {
             const user = new User();
@@ -134,11 +133,14 @@ describe('User', function () {
             user.lastname = faker.name.lastName();
             user.email = faker.internet.email();
 
-            const dto = new SetPasswordDTO("123456", "wrongpassword");
-
-            await expect(user.setPassword(dto)).to.eventually
+            await expect(user.setPassword("azerty112345678@", "wrongpassword")).to.eventually
                 .be.rejected
-                .and.be.an.instanceOf(ValidationError);
+                .and.be.an.instanceOf(ValidationError)
+                .and.deep.include({
+                    property: 'password',
+                    value: 'azerty112345678@',
+                    constraints: {Match: 'password and confirmation doesn\'t match'},
+                });
         });
 
         it('should raise error if password is not strong', async () => {
@@ -148,11 +150,14 @@ describe('User', function () {
             user.lastname = faker.name.lastName();
             user.email = faker.internet.email();
 
-            const dto = new SetPasswordDTO("123456", "123456");
-
-            await expect(user.setPassword(dto)).to.eventually
+            await expect(user.setPassword("123456", "123456")).to.eventually
                 .be.rejected
-                .and.be.an.instanceOf(ValidationError);
+                .and.be.an.instanceOf(ValidationError)
+                .and.deep.include({
+                    property: 'password',
+                    value: "123456",
+                    constraints: {Entropy: 'password is not secure'},
+                });
         });
 
         it('should set password without error', async () => {
@@ -162,9 +167,7 @@ describe('User', function () {
             user.lastname = faker.name.lastName();
             user.email = faker.internet.email();
 
-            const dto = new SetPasswordDTO("azerty112345678@", "azerty112345678@");
-
-            await expect(await user.setPassword(dto)).undefined;
+            await expect(await user.setPassword("azerty112345678@", "azerty112345678@")).undefined;
         });
 
         it('should do not valid the password', async () => {
@@ -174,9 +177,7 @@ describe('User', function () {
             user.lastname = faker.name.lastName();
             user.email = faker.internet.email();
 
-            const dto = new SetPasswordDTO("azerty112345678@", "azerty112345678@");
-
-            await user.setPassword(dto);
+            await user.setPassword("azerty112345678@", "azerty112345678@");
 
             await expect(await user.isPasswordValid("123456")).false;
         });
@@ -188,11 +189,9 @@ describe('User', function () {
             user.lastname = faker.name.lastName();
             user.email = faker.internet.email();
 
-            const dto = new SetPasswordDTO("azerty112345678@", "azerty112345678@");
-
-            await user.setPassword(dto);
+            await user.setPassword("azerty112345678@", "azerty112345678@");
 
             await expect(await user.isPasswordValid("azerty112345678@")).true;
         });
-    })
-})
+    });
+});

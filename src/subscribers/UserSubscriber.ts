@@ -6,7 +6,7 @@ import {validate} from 'class-validator';
 export class UserSubscriber implements EntitySubscriberInterface<User> {
 
     listenTo() {
-        return User
+        return User;
     }
 
     async beforeInsert(event: InsertEvent<User>) {

@@ -1,11 +1,10 @@
-import fastify from 'fastify'
+import fastify from 'fastify';
 import * as CreateUserRequestBody from "../schemas/userRequest.json";
-import {CreateUserRequestBody as QuerystringSchemaInterface} from '../types/userRequest'
+import {CreateUserRequestBody as QuerystringSchemaInterface} from '../types/userRequest';
 import {dataSource} from "./datasource";
 import {User} from "../entities/user";
-import {SetPasswordDTO} from "../DTO/SetPasswordDTO";
 
-const server = fastify()
+const server = fastify();
 
 server.post<{
     Querystring: QuerystringSchemaInterface
@@ -23,14 +22,14 @@ server.post<{
     user.firstname = firstname;
     user.lastname = lastname;
 
-    await user.setPassword(new SetPasswordDTO(password, passwordConfirmation))
+    await user.setPassword(password, passwordConfirmation);
 
-    await repo.save(user)
+    await repo.save(user);
 
 
-    reply.send("ok");
-})
+    reply.status(200);
+});
 
 export {
     server
-}
+};

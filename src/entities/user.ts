@@ -1,9 +1,8 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-import {IsNotEmpty, ValidationError} from "class-validator";
+import {IsNotEmpty, validate} from "class-validator";
 import {UniqueInColumn} from "../decorators/UniqueInColumn";
 import {compare, genSalt, hash} from "bcrypt";
 import {SetPasswordDTO} from "../DTO/SetPasswordDTO";
-import {entropy} from "../lib/passwordEntropy";
 
 @Entity()
 export class User {
@@ -33,9 +32,23 @@ export class User {
     @Column()
     passwordHash!: string;
 
-    async setPassword(dto: SetPasswordDTO) {
+    /*async setPassword(dto: SetPasswordDTO) {
         if (dto.password != dto.confirmation || entropy(dto.password) < 80) {
             throw new ValidationError();
+        }
+
+        const salt = await genSalt();
+        this.passwordHash = await hash(dto.password, salt);
+    }*/
+
+
+    async setPassword(password: string, confirmation: string) {
+        const dto = new SetPasswordDTO();
+        dto.password = password;
+        dto.confirmation = confirmation;
+        const [error] = await validate(dto)
+        if (error) {
+            throw error;
         }
 
         const salt = await genSalt();
