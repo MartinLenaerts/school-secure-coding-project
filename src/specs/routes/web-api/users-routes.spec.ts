@@ -26,8 +26,6 @@ describe('/web-api/users', function () {
                 url: `/web-api/users`, method: 'POST', query: userQueryString
             });
 
-            console.log(response.body);
-
             expect(response.statusCode).eq(200);
         });
 

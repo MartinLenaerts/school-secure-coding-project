@@ -1,6 +1,8 @@
 import {config} from 'dotenv';
 
-config();
+const env = process.env.NODE_ENV == "test" ? ".test" : "";
+
+config({path:`.env${env}`});
 
 const getOrThrow = (name: string): string => {
     const envVar = process.env[name];
@@ -19,4 +21,5 @@ export const DB_PASSWORD = getOrThrow("DB_PASSWORD");
 export const DB_DATABASE = getOrThrow("DB_DATABASE");
 export const FASTIFY_ADDR = getOrThrow("FASTIFY_ADDR");
 export const FASTIFY_PORT = parseInt(getOrThrow("FASTIFY_PORT"), 10);
+export const FASTIFY_LOGGING = getOrThrow("FASTIFY_LOGGING") == "true";
 
