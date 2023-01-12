@@ -7,6 +7,7 @@
     "build": "rm -fr dist && tsc",
     "lint": "eslint --fix src",
     "test": "npm run build && NODE_ENV=test mocha --recursive dist/specs --exit --async-stack-traces",
+    "specific-test": "npm run build && NODE_ENV=test mocha --recursive dist/specs/$TEST_PATH --exit --async-stack-traces",
     "start": "ts-node src/index.ts",
     "compile-schemas": "json2ts -i src/schemas -o src/types"
   },
