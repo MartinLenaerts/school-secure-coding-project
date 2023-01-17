@@ -6,8 +6,10 @@ export const server = fastify({ logger: FASTIFY_LOGGING })
     .addHook('onRoute', assertsResponseSchemaPresenceHook)
     .register(webApiRoutes, { prefix: '/web-api' });
 
-export function assertsResponseSchemaPresenceHook (routeOptions: RouteOptions) {
-
+export function assertsResponseSchemaPresenceHook (routeOptions : RouteOptions) {
+    if(!routeOptions.schema){
+        throw new Error(`No schema found for route ${routeOptions.url}`);
+    }
 }
 
 

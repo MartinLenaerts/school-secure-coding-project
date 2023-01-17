@@ -29,10 +29,5 @@ export const webApiRoutes: FastifyPluginCallback = (fastify, options, done) => {
         reply.status(200);
     });
 
-
-    fastify.get('/users', (request, reply) => {
-        reply.send("YES");
-    });
-
     done();
 };

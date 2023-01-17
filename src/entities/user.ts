@@ -32,21 +32,12 @@ export class User {
     @Column()
     passwordHash!: string;
 
-    /*async setPassword(dto: SetPasswordDTO) {
-        if (dto.password != dto.confirmation || entropy(dto.password) < 80) {
-            throw new ValidationError();
-        }
-
-        const salt = await genSalt();
-        this.passwordHash = await hash(dto.password, salt);
-    }*/
-
 
     async setPassword(password: string, confirmation: string) {
         const dto = new SetPasswordDTO();
         dto.password = password;
         dto.confirmation = confirmation;
-        const [error] = await validate(dto)
+        const [error] = await validate(dto);
         if (error) {
             throw error;
         }
