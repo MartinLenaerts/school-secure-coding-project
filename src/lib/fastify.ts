@@ -1,10 +1,10 @@
 import fastify, {RouteOptions} from 'fastify';
-import {webApiRoutes} from '../routes/web-api/web-api-routes';
 import {FASTIFY_LOGGING} from './dotenv';
+import {routes} from "../routes";
 
 export const server = fastify({logger: FASTIFY_LOGGING})
     .addHook('onRoute', assertsResponseSchemaPresenceHook)
-    .register(webApiRoutes, {prefix: '/web-api'});
+    .register(routes, {prefix: '/'});
 
 export function assertsResponseSchemaPresenceHook(routeOptions: RouteOptions) {
     if (!routeOptions.schema) {

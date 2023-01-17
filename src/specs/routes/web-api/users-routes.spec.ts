@@ -1,7 +1,11 @@
 import {server} from '../../../lib/fastify';
 import {expect} from "chai";
+import {dataSource} from "../../../lib/datasource";
+import {User} from "../../../entities/user";
+import {Repository} from "typeorm";
 
 describe('/web-api/users', function () {
+
     describe('POST #create', function () {
         let userQueryString = {
             firstname: "john",
@@ -11,7 +15,7 @@ describe('/web-api/users', function () {
             passwordConfirmation: "verystrongpassword@123456789"
         };
 
-        beforeEach(function () {
+        beforeEach(async function () {
             userQueryString = {
                 firstname: "john",
                 lastname: "doe",
@@ -23,8 +27,10 @@ describe('/web-api/users', function () {
 
         it('should register the user', async function () {
             const response = await server.inject({
-                url: `/web-api/users`, method: 'POST', query: userQueryString
+                url: `/web-api/users`, method: 'POST', payload: userQueryString
             });
+
+            console.log(response.body);
 
             expect(response.statusCode).eq(200);
         });
@@ -35,11 +41,11 @@ describe('/web-api/users', function () {
                     delete userQueryString[parameter as keyof typeof userQueryString];
 
                     const response = await server.inject({
-                        url: `/web-api/users`, method: 'POST', query: userQueryString
+                        url: `/web-api/users`, method: 'POST', payload: userQueryString
                     });
 
                     expect(response.statusCode).eq(400);
-                    expect(JSON.parse(response.body).message).eq("querystring must have required property '" + parameter + "'");
+                    expect(JSON.parse(response.body).message).eq("body must have required property '" + parameter + "'");
                 });
             }
 

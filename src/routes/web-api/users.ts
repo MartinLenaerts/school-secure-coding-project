@@ -1,18 +1,18 @@
-import {FastifyPluginCallback} from "fastify";
+import {FastifyInstance} from "fastify";
 import {CreateUserRequestBody as QuerystringSchemaInterface} from "../../types/userRequest";
 import * as CreateUserRequestBody from "../../schemas/userRequest.json";
 import {dataSource} from "../../lib/datasource";
 import {User} from "../../entities/user";
 
-export const webApiRoutes: FastifyPluginCallback = (fastify, options, done) => {
+export async function users(fastify: FastifyInstance) {
     fastify.post<{
-        Querystring: QuerystringSchemaInterface
-    }>('/users', {
+        Body: QuerystringSchemaInterface
+    }>('/', {
         schema: {
-            querystring: CreateUserRequestBody
+            body: CreateUserRequestBody
         }
     }, async (request, reply) => {
-        const {email, firstname, lastname, password, passwordConfirmation} = request.query;
+        const {email, firstname, lastname, password, passwordConfirmation} = request.body;
 
         const repo = dataSource.getRepository(User);
         const user = new User();
@@ -28,6 +28,4 @@ export const webApiRoutes: FastifyPluginCallback = (fastify, options, done) => {
 
         reply.status(200);
     });
-
-    done();
-};
+}
