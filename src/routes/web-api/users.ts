@@ -1,6 +1,7 @@
 import {FastifyInstance} from "fastify";
 import {CreateUserRequestBody as QuerystringSchemaInterface} from "../../types/userRequest";
 import * as CreateUserRequestBody from "../../schemas/userRequest.json";
+import * as CreateUserResponseBody from "../../schemas/userResponse.json";
 import {dataSource} from "../../lib/datasource";
 import {User} from "../../entities/user";
 
@@ -9,7 +10,8 @@ export async function users(fastify: FastifyInstance) {
         Body: QuerystringSchemaInterface
     }>('/', {
         schema: {
-            body: CreateUserRequestBody
+            body: CreateUserRequestBody,
+            response: {201: CreateUserResponseBody}
         }
     }, async (request, reply) => {
         const {email, firstname, lastname, password, passwordConfirmation} = request.body;
@@ -25,7 +27,6 @@ export async function users(fastify: FastifyInstance) {
 
         await repo.save(user);
 
-
-        reply.status(200);
+        reply.status(201);
     });
 }

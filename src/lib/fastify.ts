@@ -7,9 +7,7 @@ export const server = fastify({logger: FASTIFY_LOGGING})
     .register(routes, {prefix: '/'});
 
 export function assertsResponseSchemaPresenceHook(routeOptions: RouteOptions) {
-    if (!routeOptions.schema) {
-        throw new Error(`No schema found for route ${routeOptions.url}`);
+    if (!routeOptions.schema?.response) {
+        throw new Error(`No response schema found for route ${routeOptions.url}`);
     }
 }
-
-

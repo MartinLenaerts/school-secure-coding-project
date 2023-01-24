@@ -1,8 +1,5 @@
 import {server} from '../../../lib/fastify';
 import {expect} from "chai";
-import {dataSource} from "../../../lib/datasource";
-import {User} from "../../../entities/user";
-import {Repository} from "typeorm";
 
 describe('/web-api/users', function () {
 
@@ -32,7 +29,7 @@ describe('/web-api/users', function () {
 
             console.log(response.body);
 
-            expect(response.statusCode).eq(200);
+            expect(response.statusCode).eq(201);
         });
 
         describe('Missing parameters', function () {
