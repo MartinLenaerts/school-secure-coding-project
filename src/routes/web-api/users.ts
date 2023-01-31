@@ -29,4 +29,35 @@ export async function users(fastify: FastifyInstance) {
 
         reply.status(201);
     });
+/*
+    fastify.get<{
+        Query: { id:string }
+    }>('/:id', {
+        schema: {
+            response: {201: CreateUserResponseBody}
+        }
+    }, async (request, reply) => {
+
+        const repo = dataSource.getRepository(User);
+        const user = await repo.findOneBy({id: request.id});
+
+        reply.status(200).send({
+            email: user?.email,
+            lastname: user?.lastname,
+            firstname: user?.firstname,
+            id: user?.id
+        });
+    });
+
+    fastify.get('/', {
+        schema: {
+            response: {201: CreateUserResponseBody}
+        }
+    }, async (request, reply) => {
+
+        const repo = dataSource.getRepository(User);
+        const users = await repo.find();
+
+        reply.status(200).send(users);
+    });*/
 }

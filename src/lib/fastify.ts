@@ -1,6 +1,7 @@
 import fastify, {FastifyError, RouteOptions} from 'fastify';
 import {FASTIFY_LOGGING} from './dotenv';
 import {routes} from "../routes";
+import {errorHandler} from "./errorHandler";
 
 export const server = fastify({
     logger: FASTIFY_LOGGING,
@@ -12,6 +13,7 @@ export const server = fastify({
 })
     .addHook('onRoute', assertsResponseSchemaPresenceHook)
     .addHook('onRoute', assertsValidationSchemaPresenceHook)
+    .setErrorHandler(errorHandler)
     .register(routes, {prefix: '/'});
 
 export function assertsResponseSchemaPresenceHook(routeOptions: RouteOptions) {
